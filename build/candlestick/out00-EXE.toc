@@ -1,0 +1,9 @@
+('/home/rohan/Documents/repos/Python Hacks/dist/candlestick',
+ True,
+ False,
+ None,
+ None,
+ [],
+ None,
+ False,
+ 1433270561)
