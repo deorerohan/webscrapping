@@ -11,65 +11,66 @@
 
 import requests, os, bs4
 
-
-def getNextLink(soup):
-	return soup.select('#comic a')[0].get('href')
-
-
-
-url = 'http://www.peppertop.com/greys/comic/yeti-boots/'              # starting url
-#url = 'http://www.peppertop.com/greys/comic/spider-grey/'
-
-linksFile = open('greys/links.txt', 'r')
-listOflinks = linksFile.readlines()
-linksFile.close()
-
-linksFile = open('greys/links.txt', 'a')
-
-#os.makedirs('xkcd', exist_ok=True)   # store comics in ./xkcd
-#while not url.endswith('#'):
-while True:
-    # TODO: Download the page.
-    print('Downloading page %s...' % url)
-    res = requests.get(url)
-    res.raise_for_status()
-
-    soup = bs4.BeautifulSoup(res.text)
+class greys:
+    """ class to download greys comic """
     
-    # Get the Prev button's url.
-    nextLink = getNextLink(soup)
-    print nextLink
-    
-    if url in listOflinks:
-		url = nextLink
-		print 'continuing'
-		#exit()
-		continue
-		
-    
-    print '==============================='
+    def __init__ (self):
+        """ Class initialiser """
+        self.url = 'http://www.peppertop.com/greys/comic/yeti-boots/'              # starting url
+        self.nextLink = 'temp'
+        
+    def DownloadPage(self):
+        print('Downloading page %s...' % self.url)
+        res = requests.get(self.url)
+        res.raise_for_status()
+        self.soup = bs4.BeautifulSoup(res.text)
+        
+    def IsPageDownloaded(self):
+        return self.url + '\n' in self.listOflinks
+        
+    def DownloadComic(self):
+        comicElem = self.soup.select('#comic img')
+        #print comicElem
+        
+        if comicElem == []:
+             print('Could not find comic image.')
+        else:
+             comicUrl = comicElem[0].get('src')
+             comicUrl = 'http:' + comicUrl
+             print('Downloading image %s...' % (comicUrl))
+             res = requests.get(comicUrl)
+             res.raise_for_status()
+             
+        imageFile = open(os.path.join('greys', os.path.basename(comicUrl)), 'wb')
+        for chunk in res.iter_content(100000):
+            imageFile.write(chunk)
+        imageFile.close()
+        
+        
+    def WriteComicLink(self):
+        self.linksFile.write(self.url + '\n')
+        
+    def SetNextLink(self):
+        self.url = self.nextLink = self.GetNextLink()
+        
+    def GetNextLink(self):
+        comicElem = self.soup.select('#comic a')
+        if comicElem == []:
+            return ''
+        else:
+            return comicElem[0].get('href')
+        
+    def GetDownloadedLinks(self):
+        myFile = open('greys/links.txt', 'r')
+        self.listOflinks = myFile.readlines()
+        myFile.close()
+        self.linksFile = open('greys/links.txt', 'a')
+        
+    def IsThereNext(self):
+        return self.nextLink is not ''
+        
+    def Done(self):
+        self.linksFile.close()
 
-    comicElem = soup.select('#comic img')
-    print comicElem
-    
-    if comicElem == []:
-         print('Could not find comic image.')
-    else:
-         comicUrl = comicElem[0].get('src')
-         comicUrl = 'http:' + comicUrl
-         # Download the image.
-         print('Downloading image %s...' % (comicUrl))
-         res = requests.get(comicUrl)
-         res.raise_for_status()
-         
-    imageFile = open(os.path.join('greys', os.path.basename(comicUrl)), 'wb')
-    for chunk in res.iter_content(100000):
-        imageFile.write(chunk)
-    imageFile.close()
-    linksFile.write(url)
-    url = nextLink
 
-linksFile.close()
-
-print('Done.')
-
+print "Please run WebScrapping.py"
