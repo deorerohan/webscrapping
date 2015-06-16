@@ -8,7 +8,8 @@ class monsters:
     
     def __init__ (self):
         """ Class initialiser """
-        self.counter = 1
+        #self.counter = 1
+        self.counter = 9
         self.url = 'http://peppertop.com/monsters/comic/' + '{0:03}'.format(self.counter)            # starting url
         
     def DownloadPage(self):

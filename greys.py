@@ -16,7 +16,8 @@ class greys:
     
     def __init__ (self):
         """ Class initialiser """
-        self.url = 'http://www.peppertop.com/greys/comic/yeti-boots/'              # starting url
+        #self.url = 'http://www.peppertop.com/greys/comic/yeti-boots/'              # starting url
+        self.url = 'http://www.peppertop.com/greys/comic/teenagers/'
         self.nextLink = 'temp'
         
     def DownloadPage(self):

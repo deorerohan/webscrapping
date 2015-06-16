@@ -1,19 +1,23 @@
 #!/usr/bin/env python
 
 
-import greys
+#import greys
 #import fullcircle
 #import monsters
+import lefthandedtoons
 
 # To Download Greys
-scrap = greys.greys()
+#scrap = greys.greys()
 
 
 # To Download Full Circle
 #scrap = fullcircle.fullcircle()
 
-#To Download Monsters
+# To Download Monsters
 #scrap = monsters.monsters()
+
+# To Download Left handed toons
+scrap = lefthandedtoons.lefthandedtoons()
 
 scrap.GetDownloadedLinks()
 
