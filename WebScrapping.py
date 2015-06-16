@@ -4,7 +4,8 @@
 #import greys
 #import fullcircle
 #import monsters
-import lefthandedtoons
+#import lefthandedtoons
+import xkcd_download
 
 # To Download Greys
 #scrap = greys.greys()
@@ -17,7 +18,10 @@ import lefthandedtoons
 #scrap = monsters.monsters()
 
 # To Download Left handed toons
-scrap = lefthandedtoons.lefthandedtoons()
+#scrap = lefthandedtoons.lefthandedtoons()
+
+# To Download XKCD comic
+scrap = xkcd_download.xkcd()
 
 scrap.GetDownloadedLinks()
 
