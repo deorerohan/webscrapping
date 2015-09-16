@@ -11,12 +11,15 @@ class lefthandedtoons:
     def __init__ (self):
         """ Class initialiser """
         #self.counter = 1
-        self.counter = 62
+        self.counter = 88
         self.url = 'http://www.lefthandedtoons.com/' + str(self.counter)            # starting url
+        self.absPath = os.path.dirname(os.path.abspath(__file__)) + '/lht/'
+	self.linksFile = ''
         
     def DownloadPage(self):
         print('Downloading page %s...' % self.url)
         res = requests.get(self.url)
+        print res
         res.raise_for_status()
         self.soup = bs4.BeautifulSoup(res.text)
         
@@ -25,16 +28,18 @@ class lefthandedtoons:
         
     def DownloadComic(self):
         comicElem = self.soup.select('#comicwrap img')
-        
         if comicElem == []:
              print('Could not find comic image.')
         else:
-             comicUrl = comicElem[3].get('src')
+             if len(comicElem) < 4:
+                 print "something went seriously wrong ...\n "
+                 print comicElem
+             comicUrl = comicElem[-1].get('src')
              print('Downloading image %s...' % (comicUrl))
              res = requests.get(comicUrl)
              res.raise_for_status()
              
-        imageFile = open(os.path.join('lht', os.path.basename(comicUrl)), 'wb')
+        imageFile = open(os.path.join(self.absPath, os.path.basename(comicUrl)), 'wb')
         for chunk in res.iter_content(100000):
             imageFile.write(chunk)
         imageFile.close()
@@ -51,10 +56,12 @@ class lefthandedtoons:
         return 'http://www.lefthandedtoons.com/' + str(self.counter) 
         
     def GetDownloadedLinks(self):
-        myFile = open('lht/links.txt', 'r')
+        myFile = open(self.absPath + 'links.txt', 'r')
         self.listOflinks = myFile.readlines()
         myFile.close()
-        self.linksFile = open('lht/links.txt', 'a')
+        self.url = self.listOflinks[len(self.listOflinks) - 1].strip()
+        self.counter = int(self.url[31:])
+        self.linksFile = open(self.absPath + 'links.txt', 'a')
         
     def IsThereNext(self):
         return True # There will always be some link

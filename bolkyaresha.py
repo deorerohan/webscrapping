@@ -9,7 +9,7 @@ logging.basicConfig(filename='resha/webscrapping.log', level=logging.INFO)
 website = 'http://www.bolkyaresha.marathi-unlimited.in/page/'
 counter = 1
 url = 'http://www.bolkyaresha.marathi-unlimited.in/mala-room-hawi-ahe/'
-
+absPath = os.path.dirname(os.path.abspath(__file__)) + '/resha/'
 while True:
 #while counter <= 10:
 #if True:
@@ -32,7 +32,7 @@ while True:
     res = requests.get(comicUrl)
     res.raise_for_status()
 
-    imageFile = open(os.path.join('resha', os.path.basename(comicUrl)), 'wb')
+    imageFile = open(os.path.join(absPath, os.path.basename(comicUrl)), 'wb')
     for chunk in res.iter_content(100000):
         imageFile.write(chunk)
     imageFile.close()

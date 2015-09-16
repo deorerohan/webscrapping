@@ -11,6 +11,7 @@ class monsters:
         #self.counter = 1
         self.counter = 9
         self.url = 'http://peppertop.com/monsters/comic/' + '{0:03}'.format(self.counter)            # starting url
+        self.absPath = os.path.dirname(os.path.abspath(__file__)) + '/monsters/'
         
     def DownloadPage(self):
         print('Downloading page %s...' % self.url)
@@ -32,7 +33,7 @@ class monsters:
              res = requests.get(comicUrl)
              res.raise_for_status()
              
-        imageFile = open(os.path.join('monsters', os.path.basename(comicUrl)), 'wb')
+        imageFile = open(os.path.join(self.absPath, os.path.basename(comicUrl)), 'wb')
         for chunk in res.iter_content(100000):
             imageFile.write(chunk)
         imageFile.close()
@@ -49,10 +50,12 @@ class monsters:
         return 'http://peppertop.com/monsters/comic/' + '{0:03}'.format(self.counter) 
         
     def GetDownloadedLinks(self):
-        myFile = open('monsters/links.txt', 'r')
+        myFile = open(self.absPath + 'links.txt', 'r')
         self.listOflinks = myFile.readlines()
         myFile.close()
-        self.linksFile = open('monsters/links.txt', 'a')
+        self.url = self.listOflinks[len(self.listOflinks) - 1].strip()
+        self.counter = int(self.url[36:])
+        self.linksFile = open(self.absPath + 'links.txt', 'a')
         
     def IsThereNext(self):
         return True # There will always be some link

@@ -27,11 +27,9 @@ class magpi:
         
         
     def WriteComicLink(self):
-	print 'writing url'
         self.linksFile.write(self.url + '\n')
         
     def SetNextLink(self):
-	print 'getting new url' 
         self.url = self.GetNextLink()
         
     def GetNextLink(self):
@@ -43,9 +41,9 @@ class magpi:
         myFile = open(self.absPath + 'links.txt', 'r')
         self.listOflinks = myFile.readlines()
         myFile.close()
-#	print self. listOflinks
- #       self.url = self.listOflinks[len(self.listOflinks) - 1].strip()
-#        self.counter = int(self.url[36:])
+        self.url = self.listOflinks[len(self.listOflinks) - 1].strip()
+	print self.url
+        self.counter = int(self.url[46:48])
 	print self.counter
         self.linksFile = open(self.absPath + 'links.txt', 'a')
         

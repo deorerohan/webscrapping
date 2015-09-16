@@ -19,6 +19,7 @@ class greys:
         #self.url = 'http://www.peppertop.com/greys/comic/yeti-boots/'              # starting url
         self.url = 'http://www.peppertop.com/greys/comic/teenagers/'
         self.nextLink = 'temp'
+        self.absPath = os.path.dirname(os.path.abspath(__file__)) + '/greys/'
         
     def DownloadPage(self):
         print('Downloading page %s...' % self.url)
@@ -42,7 +43,7 @@ class greys:
              res = requests.get(comicUrl)
              res.raise_for_status()
              
-        imageFile = open(os.path.join('greys', os.path.basename(comicUrl)), 'wb')
+        imageFile = open(os.path.join(self.absPath, os.path.basename(comicUrl)), 'wb')
         for chunk in res.iter_content(100000):
             imageFile.write(chunk)
         imageFile.close()
@@ -62,10 +63,11 @@ class greys:
             return comicElem[0].get('href')
         
     def GetDownloadedLinks(self):
-        myFile = open('greys/links.txt', 'r')
+        myFile = open(self.absPath + 'links.txt', 'r')
         self.listOflinks = myFile.readlines()
         myFile.close()
-        self.linksFile = open('greys/links.txt', 'a')
+        self.url = self.listOflinks[len(self.listOflinks) - 1].strip()
+        self.linksFile = open(self.absPath + 'links.txt', 'a')
         
     def IsThereNext(self):
         return self.nextLink is not ''

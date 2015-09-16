@@ -7,9 +7,10 @@ class xkcd:
     """ class to download XKCD comic"""
     def __init__ (self):
         """ Class initialiser """
-        self.counter = 1
+        self.counter = 405
         #self.counter = 62
         self.url = 'http://xkcd.com/' + str(self.counter)            # starting url
+        self.absPath = os.path.dirname(os.path.abspath(__file__)) + '/xkcd/'
         
     def DownloadPage(self):
         print('Downloading page %s...' % self.url)
@@ -32,7 +33,7 @@ class xkcd:
              res = requests.get(comicUrl)
              res.raise_for_status()
              
-        imageFile = open(os.path.join('xkcd', os.path.basename(comicUrl)), 'wb')
+        imageFile = open(os.path.join(self.absPath, os.path.basename(comicUrl)), 'wb')
         for chunk in res.iter_content(100000):
             imageFile.write(chunk)
         imageFile.close()
@@ -49,10 +50,13 @@ class xkcd:
         return 'http://xkcd.com/' + str(self.counter) 
         
     def GetDownloadedLinks(self):
-        myFile = open('xkcd/links.txt', 'r')
+        myFile = open(self.absPath+'links.txt', 'r')
         self.listOflinks = myFile.readlines()
         myFile.close()
-        self.linksFile = open('xkcd/links.txt', 'a')
+        self.url = self.listOflinks[-1].strip()
+        self.counter = int(self.url[16:])
+        print self.counter
+        self.linksFile = open(self.absPath + 'links.txt', 'a')
         
     def IsThereNext(self):
         return True # There will always be some link

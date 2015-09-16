@@ -11,16 +11,17 @@ class fullcircle:
     
     def __init__ (self):
         """ Class initialiser """
-        self.counter = 1
-        self.url = 'http://fullcirclemagazine.org/issue-' + str(self.counter)             # starting url
+        self.counter = 98 #1
+        self.url = 'http://fullcirclemagazine.org/issue-' + str(self.counter) + '/'            # starting url
         self.nextLink = 'temp'
+        self.absPath = os.path.dirname(os.path.abspath(__file__)) + '/fullcircle/'
         
     def DownloadPage(self):
         print('Downloading page %s...' % self.url)
         res = requests.get(self.url)
         res.raise_for_status()
         self.soup = bs4.BeautifulSoup(res.text)
-        
+                
     def IsPageDownloaded(self):
         return self.url + '\n' in self.listOflinks
         
@@ -39,7 +40,7 @@ class fullcircle:
             res = requests.get(comicUrl)
             res.raise_for_status()
              
-        imageFile = open(os.path.join('fullcircle', os.path.basename(comicUrl)), 'wb')
+        imageFile = open(os.path.join(self.absPath, os.path.basename(comicUrl)), 'wb')
         for chunk in res.iter_content(100000):
             imageFile.write(chunk)
         imageFile.close()
@@ -56,10 +57,12 @@ class fullcircle:
         return 'http://fullcirclemagazine.org/issue-' + str(self.counter)
         
     def GetDownloadedLinks(self):
-        myFile = open('fullcircle/links.txt', 'r')
+        myFile = open(self.absPath + 'links.txt', 'r')
         self.listOflinks = myFile.readlines()
         myFile.close()
-        self.linksFile = open('fullcircle/links.txt', 'a')
+        self.url = self.listOflinks[len(self.listOflinks) - 1].strip()
+        self.counter = int(self.url[36:])
+        self.linksFile = open(self.absPath + 'links.txt', 'a')
         
     def IsThereNext(self):
         return True # There will always be some link
