@@ -14,7 +14,6 @@ class lefthandedtoons:
         self.counter = 88
         self.url = 'http://www.lefthandedtoons.com/' + str(self.counter)            # starting url
         self.absPath = os.path.dirname(os.path.abspath(__file__)) + '/lht/'
-	self.linksFile = ''
         
     def DownloadPage(self):
         print('Downloading page %s...' % self.url)
@@ -28,18 +27,25 @@ class lefthandedtoons:
         
     def DownloadComic(self):
         comicElem = self.soup.select('#comicwrap img')
+	print comicElem
         if comicElem == []:
              print('Could not find comic image.')
         else:
              if len(comicElem) < 4:
                  print "something went seriously wrong ...\n "
                  print comicElem
-             comicUrl = comicElem[-1].get('src')
+             comicUrl = comicElem[-2].get('src')
              print('Downloading image %s...' % (comicUrl))
              res = requests.get(comicUrl)
              res.raise_for_status()
-             
-        imageFile = open(os.path.join(self.absPath, os.path.basename(comicUrl)), 'wb')
+	
+	filename = os.path.basename(comicUrl)             
+	if os.path.exists(os.path.join(self.absPath, filename)):
+		print 'file %s exists for %s' %(filename, self.url)
+		raise ValueError('File %s exist for url %s' %(filename, self.url))
+	else :
+		print '%s donot  exist' %(filename)
+        imageFile = open(os.path.join(self.absPath, filename), 'wb')
         for chunk in res.iter_content(100000):
             imageFile.write(chunk)
         imageFile.close()

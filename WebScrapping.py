@@ -34,9 +34,9 @@ while case < 7:
 		break
     
     #if debuggin use this
-    if case != 6:
+    '''if case != 3:
 		case +=1 
-		continue
+		continue'''
         
     try:
         scrap.GetDownloadedLinks()
